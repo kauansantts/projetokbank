@@ -6,8 +6,7 @@ projeto de treino
 Sistema bancário simples em Python
 
 ## Funcionalidades
-- Depósito
-- Saque
+- Manipulação de conta
 - Consulta de saldo
 
 
