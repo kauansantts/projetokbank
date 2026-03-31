@@ -1,7 +1,7 @@
 # projetokbank
 projeto de treino 
 
-# Projeto KBank
+# Projeto KBANK
 
 Sistema bancário simples em Python
 
