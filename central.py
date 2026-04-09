@@ -4,6 +4,27 @@ from rich.table import Table
 from random import randint
 from time import sleep
 
+arq = 'dados.txt'
+
+
+class Cliente:
+    def __init__(self, nome, senha):
+        self.nome_conta = nome
+        self.senha_conta = senha
+        self.clientes = []
+
+    def cadastrar_cliente(self, arq):
+        a = open(arq, 'at')
+        a.write(f'Nome:{self.nome_conta} [{self.senha_conta}]\n')
+        a.close()
+        print(f'Novo registro de cliente criado: [red]{self.nome_conta}[/]')
+
+class Conta:
+    def __init__(self):
+        pass         #usar como funcao de entrar no sistema --- 2 - Entrar
+
+
+
 def linha(l=40):
     return '-'* l
 
@@ -32,7 +53,8 @@ def menu(opcoes):
     opc = leiaInt('Sua opção: ')
     return opc
 
-    
+
+   
 cabecalho('MENU PRINCIPAL')
 while True:
     res = menu(['Cadastrar conta', 'Entrar', 'SAIR'])
@@ -41,4 +63,8 @@ while True:
         sleep(0.6)
         break
     
-
+    elif res == 1:
+        nome = input('Digite seu nome: ')
+        senha = input('Digite sua senha: ')
+        cliente = Cliente(nome, senha)
+        cliente.cadastrar_cliente(arq)
