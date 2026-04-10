@@ -1,1 +1,3 @@
-Nome:kauan [kakai]
+kauan:kauangalo
+lidiomara:euamokakai
+stefan:stelena

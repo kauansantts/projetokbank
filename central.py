@@ -14,16 +14,28 @@ class Cliente:
         self.clientes = []
 
     def cadastrar_cliente(self, arq):
-        a = open(arq, 'at')
-        a.write(f'Nome:{self.nome_conta} [{self.senha_conta}]\n')
-        a.close()
-        print(f'Novo registro de cliente criado: [red]{self.nome_conta}[/]')
+        with open(arq, 'at') as arquivo:
+            arquivo.write(f'{self.nome_conta}:{self.senha_conta}\n')
+            print(f'Novo registro de cliente criado: [red]{self.nome_conta}[/]')
 
+class Login():
+    def __init__(self, nome, senha):
+        self.nome = nome
+        self.senha = senha
+    
+    def verificacao_conta(self, arq):
+        with open(arq, 'r') as arquivo:
+        
+            for linha in arquivo:
+                if self.nome in linha and self.senha in linha:
+                    print(f'[green]{self.nome} logado com sucesso!![/]')
+                    return
+            
+            print(f'[red]Usuario:{self.nome.upper()}\nSenha:{self.senha.upper()} não cadastrado![/]')
+            
 class Conta:
     def __init__(self):
-        pass         #usar como funcao de entrar no sistema --- 2 - Entrar
-
-
+        pass # tratar sobre saldo e coisas afins, apos entrar no login do sistema
 
 def linha(l=40):
     return '-'* l
@@ -53,7 +65,6 @@ def menu(opcoes):
     opc = leiaInt('Sua opção: ')
     return opc
 
-
    
 cabecalho('MENU PRINCIPAL')
 while True:
@@ -68,3 +79,9 @@ while True:
         senha = input('Digite sua senha: ')
         cliente = Cliente(nome, senha)
         cliente.cadastrar_cliente(arq)
+    
+    elif res == 2:
+        usuario = input('Digite seu nome: ')
+        senha_usuario = input('Digite sua senha: ')
+        conta = Login(usuario, senha_usuario)
+        conta.verificacao_conta(arq)
