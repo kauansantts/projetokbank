@@ -13,29 +13,43 @@ class Cliente:
         self.senha_conta = senha
         self.clientes = []
 
+
     def cadastrar_cliente(self, arq):
         with open(arq, 'at') as arquivo:
             arquivo.write(f'{self.nome_conta}:{self.senha_conta}\n')
             print(f'Novo registro de cliente criado: [red]{self.nome_conta}[/]')
-
-class Login():
-    def __init__(self, nome, senha):
+    
+    def login(self,nome, senha, arq):
         self.nome = nome
         self.senha = senha
-    
-    def verificacao_conta(self, arq):
         with open(arq, 'r') as arquivo:
-        
             for linha in arquivo:
                 if self.nome in linha and self.senha in linha:
-                    print(f'[green]{self.nome} logado com sucesso!![/]')
-                    return
-            
-            print(f'[red]Usuario:{self.nome.upper()}\nSenha:{self.senha.upper()} não cadastrado![/]')
-            
+                    return True
+                else:
+                    sleep(0.5)
+                    print(f'[red]Usuario:{self.nome.upper()}\nSenha:{self.senha.upper()} não cadastrado![/]')
+                    return False
+  
+
+
 class Conta:
-    def __init__(self):
-        pass # tratar sobre saldo e coisas afins, apos entrar no login do sistema
+    
+    saldo_atual = 0
+    
+    def __init__(self, cliente):
+        self.cliente_logado = cliente
+        res = ''
+    
+    def analise_saldo(self):
+        print(f'[green]SALDO[/]: R${self.saldo_atual}')
+        res = input('Deseja modificar seu saldo[S/N]: ')
+        if res in 'Ss':
+            self.saldo_atual = float(input('R$ '))  
+            print(f'[green]SALDO:[/] R${self.saldo_atual}')
+        elif res in 'Nn':
+            print('[green]Modifique quando quiser![/]')
+
 
 def linha(l=40):
     return '-'* l
@@ -83,5 +97,17 @@ while True:
     elif res == 2:
         usuario = input('Digite seu nome: ')
         senha_usuario = input('Digite sua senha: ')
-        conta = Login(usuario, senha_usuario)
-        conta.verificacao_conta(arq)
+        cliente = Cliente(usuario, senha_usuario)
+        retorno = cliente.login(usuario, senha_usuario, arq)
+        if retorno == True:
+            res = ''
+            while res.upper() in 'SAIR':
+                cliente_logado_nome = cliente.nome
+                cliente_logado = cliente
+                sleep(0.5)
+                cliente_logado = Conta(cliente_logado)
+                painel = Panel(f'', title=f'[green]Bem vindo, {cliente_logado_nome}![/]') #CONTINUAR ESSE RACIOCIONIO DE MOSTRAR TUDO EM UM PAINEL
+                print(painel)
+                res = input('Quer continuar[S/N]: ')
+                if res in 'Nn':
+                    break
