@@ -43,12 +43,29 @@ class Conta:
     
     def analise_saldo(self):
         print(f'[green]SALDO[/]: R${self.saldo_atual}')
-        res = input('Deseja modificar seu saldo[S/N]: ')
-        if res in 'Ss':
-            self.saldo_atual = float(input('R$ '))  
-            print(f'[green]SALDO:[/] R${self.saldo_atual}')
-        elif res in 'Nn':
-            print('[green]Modifique quando quiser![/]')
+        res = ''
+        while res in 'Ss':
+            res = input('Deseja modificar seu saldo[S/N]: ')
+
+            if res in 'Nn':
+                sleep(0.5)
+                print(f'[green]SALDO[/]: R${self.saldo_atual}')
+                print('[green]Modifique quando quiser![/]')
+                print(linha())
+                break
+            else:
+                self.saldo_atual = float(input('R$ '))
+                sleep(0.4)
+                print(f'[green]NOVO SALDO:[/] R${self.saldo_atual}')
+    
+    def menu_logado(self, opc):
+        match opc:
+            case 1:
+                valor = float(input('Qual valor para o planejamento:R$ '))
+                print(f'Com 6 meses investindo {valor:.2f} seu saldo chega a R${self.saldo_atual + (valor * 6)}')
+            case 2:
+                valor = float(input('Qual valor para o planejamento:R$ '))
+                print(f'Com 12 meses investindo {valor:.2f} seu saldo chega a R${self.saldo_atual + (valor * 12)}')
 
 
 def linha(l=40):
@@ -100,14 +117,27 @@ while True:
         cliente = Cliente(usuario, senha_usuario)
         retorno = cliente.login(usuario, senha_usuario, arq)
         if retorno == True:
-            res = ''
-            while res.upper() in 'SAIR':
+            resp = ''
+            while True:
                 cliente_logado_nome = cliente.nome
-                cliente_logado = cliente
                 sleep(0.5)
-                cliente_logado = Conta(cliente_logado)
-                painel = Panel(f'', title=f'[green]Bem vindo, {cliente_logado_nome}![/]') #CONTINUAR ESSE RACIOCIONIO DE MOSTRAR TUDO EM UM PAINEL
-                print(painel)
-                res = input('Quer continuar[S/N]: ')
-                if res in 'Nn':
-                    break
+                cabecalho(f'[green]         BEM VINDO {cliente_logado_nome}[/]')
+                cliente_logado = Conta(cliente)
+                cliente_logado.analise_saldo()
+                res = ''
+                while True:
+                    res = input('Quer fazer um planejamento[S/N]: ')
+                    if res in 'Ss':
+                        painel = Panel('[blue]1[/] - 6 Meses\n[blue]2[/] - 12 Meses', title='[green]PLANEJAMENTO[/]')
+                        print(painel)
+                        opc = int(input('Sua opção: '))
+                        cliente_logado.menu_logado(opc)
+                        respo = input('Quer continuar[S/N]: ')
+                        if respo in 'Nn':
+                            break 
+                    elif res in 'Nn':
+                        break
+                resp = input(f'Deseja manipular algo mais em sua conta [green]{cliente_logado_nome}[/]?[SAIR]: ')
+                if resp == 'SAIR':
+                    retorno = False
+                    break 
