@@ -11,12 +11,13 @@ class Cliente:
     def __init__(self, nome, senha):
         self.nome_conta = nome
         self.senha_conta = senha
-        self.clientes = []
+        
 
 
-    def cadastrar_cliente(self, arq):
+    def cadastrar_cliente(self, arq, saldo):
+        self.saldo_conta = saldo
         with open(arq, 'at') as arquivo:
-            arquivo.write(f'{self.nome_conta}:{self.senha_conta}\n')
+            arquivo.write(f'{self.nome_conta}:{self.senha_conta}:{self.saldo_conta}\n')
             print(f'Novo registro de cliente criado: [red]{self.nome_conta}[/]')
     
     def login(self,nome, senha, arq):
@@ -24,48 +25,62 @@ class Cliente:
         self.senha = senha
         with open(arq, 'r') as arquivo:
             for linha in arquivo:
-                if self.nome in linha and self.senha in linha:
+                dados = linha.strip().split(':')
+
+                if self.nome == dados[0] and self.senha == dados[1]:
+                    self.saldo_conta = float(dados[2])
                     return True
-                else:
-                    sleep(0.5)
-                    print(f'[red]Usuario:{self.nome.upper()}\nSenha:{self.senha.upper()} não cadastrado![/]')
-                    return False
+            print(f'[red]Usuario:{self.nome.upper()}\nSenha:{self.senha.upper()} não cadastrado![/]')
+            return False
   
 
 
 class Conta:
     
-    saldo_atual = 0
-    
     def __init__(self, cliente):
         self.cliente_logado = cliente
+        self.saldo_atual = self.cliente_logado.saldo_conta
         res = ''
     
-    def analise_saldo(self):
-        print(f'[green]SALDO[/]: R${self.saldo_atual}')
+    def analise_saldo(self, arq):
+        print(f'[green]SALDO[/]: R${self.cliente_logado.saldo_conta}')
         res = ''
         while res in 'Ss':
             res = input('Deseja modificar seu saldo[S/N]: ')
 
             if res in 'Nn':
                 sleep(0.5)
-                print(f'[green]SALDO[/]: R${self.saldo_atual}')
+                print(f'[green]SALDO[/]: R${self.cliente_logado.saldo_conta}')
                 print('[green]Modifique quando quiser![/]')
-                print(linha())
+
                 break
             else:
-                self.saldo_atual = float(input('R$ '))
+                self.cliente_logado.saldo_conta = float(input('R$ '))
+                linhas = []
+
+                with open(arq, 'r') as arquivo:
+                    for linha in arquivo:
+                        dados = linha.strip().split(':')
+
+                        if dados[0] == self.cliente_logado.nome_conta and dados[1] == self.cliente_logado.senha_conta:
+                            linhas.append(f'{dados[0]}:{dados[1]}:{self.cliente_logado.saldo_conta}\n')
+                        else:
+                            linhas.append(linha)
+
+                with open(arq, 'w') as arquivo:
+                    arquivo.writelines(linhas)
                 sleep(0.4)
-                print(f'[green]NOVO SALDO:[/] R${self.saldo_atual}')
+                print(f'[green]NOVO SALDO:[/] R${self.cliente_logado.saldo_conta}')
+                
     
     def menu_logado(self, opc):
         match opc:
             case 1:
                 valor = float(input('Qual valor para o planejamento:R$ '))
-                print(f'Com 6 meses investindo {valor:.2f} seu saldo chega a R${self.saldo_atual + (valor * 6)}')
+                print(f'Com 6 meses investindo {valor:.2f} seu saldo chega a R${self.cliente_logado.saldo_conta + (valor * 6)}')
             case 2:
                 valor = float(input('Qual valor para o planejamento:R$ '))
-                print(f'Com 12 meses investindo {valor:.2f} seu saldo chega a R${self.saldo_atual + (valor * 12)}')
+                print(f'Com 12 meses investindo {valor:.2f} seu saldo chega a R${self.cliente_logado.saldo_conta + (valor * 12)}')
 
 
 def linha(l=40):
@@ -108,8 +123,9 @@ while True:
     elif res == 1:
         nome = input('Digite seu nome: ')
         senha = input('Digite sua senha: ')
+        saldo = float(input('Digite seu saldo:R$'))
         cliente = Cliente(nome, senha)
-        cliente.cadastrar_cliente(arq)
+        cliente.cadastrar_cliente(arq, saldo)
     
     elif res == 2:
         usuario = input('Digite seu nome: ')
@@ -123,7 +139,7 @@ while True:
                 sleep(0.5)
                 cabecalho(f'[green]         BEM VINDO {cliente_logado_nome}[/]')
                 cliente_logado = Conta(cliente)
-                cliente_logado.analise_saldo()
+                cliente_logado.analise_saldo(arq)
                 res = ''
                 while True:
                     res = input('Quer fazer um planejamento[S/N]: ')
@@ -137,7 +153,6 @@ while True:
                             break 
                     elif res in 'Nn':
                         break
-                resp = input(f'Deseja manipular algo mais em sua conta [green]{cliente_logado_nome}[/]?[SAIR]: ')
-                if resp == 'SAIR':
-                    retorno = False
+                resp = input(f'Deseja manipular algo mais em sua conta {cliente_logado_nome}?[S/N] ')
+                if resp in 'Nn':
                     break 

@@ -1,3 +1,2 @@
-kauan:kauangalo
-lidiomara:euamokakai
-stefan:stelena
+kauan:kauangalo:900.0
+lidi:lili:1200.0
