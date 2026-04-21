@@ -1,6 +1,5 @@
 from rich import print
 from rich.panel import Panel
-from rich.table import Table
 from random import randint
 from time import sleep
 
@@ -10,9 +9,7 @@ arq = 'dados.txt'
 class Cliente:
     def __init__(self, nome, senha):
         self.nome_conta = nome
-        self.senha_conta = senha
-        
-
+        self.senha_conta:float = senha
 
     def cadastrar_cliente(self, arq, saldo):
         self.saldo_conta = saldo
@@ -36,7 +33,6 @@ class Cliente:
 
 
 class Conta:
-    
     def __init__(self, cliente):
         self.cliente_logado = cliente
         self.saldo_atual = self.cliente_logado.saldo_conta
@@ -47,7 +43,8 @@ class Conta:
         res = ''
         while res in 'Ss':
             res = input('Deseja modificar seu saldo[S/N]: ')
-
+            while res.upper() not in 'SN':
+                res = input('Deseja modificar seu saldo[S/N]: ')
             if res in 'Nn':
                 sleep(0.5)
                 print(f'[green]SALDO[/]: R${self.cliente_logado.saldo_conta}')
@@ -76,11 +73,11 @@ class Conta:
     def menu_logado(self, opc):
         match opc:
             case 1:
-                valor = float(input('Qual valor para o planejamento:R$ '))
-                print(f'Com 6 meses investindo {valor:.2f} seu saldo chega a R${self.cliente_logado.saldo_conta + (valor * 6)}')
+                valor = leiaFloat('Qual valor para o planejamento:R$ ')
+                print(f'Com 6 meses investindo {valor:.2f} seu saldo chega a R${self.cliente_logado.saldo_conta + (valor * 6):.2f}')
             case 2:
-                valor = float(input('Qual valor para o planejamento:R$ '))
-                print(f'Com 12 meses investindo {valor:.2f} seu saldo chega a R${self.cliente_logado.saldo_conta + (valor * 12)}')
+                valor = leiaFloat('Qual valor para o planejamento:R$ ')
+                print(f'Com 12 meses investindo {valor:.2f} seu saldo chega a R${self.cliente_logado.saldo_conta + (valor * 12):.2f}')
 
 
 def linha(l=40):
@@ -100,9 +97,18 @@ def leiaInt(numero):
             continue
         else:
             return n
+        
+def leiaFloat(numero):
+    while True:
+        try:
+            n = float(input(numero))
+        except(ValueError, TypeError):
+            print('[red]ERRO!Digite um numero valido.[/]')
+            continue
+        else:
+            return n
 
 def menu(opcoes):
-    cabecalho('OPÇÕES')
     c = 1
     for v in opcoes:
         print(f'{c} - {v}')
@@ -112,8 +118,8 @@ def menu(opcoes):
     return opc
 
    
-cabecalho('MENU PRINCIPAL')
 while True:
+    cabecalho('MENU PRINCIPAL')
     res = menu(['Cadastrar conta', 'Entrar', 'SAIR'])
     if res == 3:
         print(f'[green]{"K-BANK AGRADECE":^40}[/]')
@@ -123,7 +129,7 @@ while True:
     elif res == 1:
         nome = input('Digite seu nome: ')
         senha = input('Digite sua senha: ')
-        saldo = float(input('Digite seu saldo:R$'))
+        saldo = leiaFloat('Digite seu saldo:R$')
         cliente = Cliente(nome, senha)
         cliente.cadastrar_cliente(arq, saldo)
     
@@ -143,16 +149,24 @@ while True:
                 res = ''
                 while True:
                     res = input('Quer fazer um planejamento[S/N]: ')
+                    while res.upper() not in 'SN':
+                        res = input('Quer fazer um planejamento[S/N]: ')
                     if res in 'Ss':
-                        painel = Panel('[blue]1[/] - 6 Meses\n[blue]2[/] - 12 Meses', title='[green]PLANEJAMENTO[/]')
+                        painel = Panel('[blue]1[/] - 6 Meses\n[blue]2[/] - 12 Meses', title='[green]PLANEJAMENTO[/]', width=40)
                         print(painel)
-                        opc = int(input('Sua opção: '))
+                        opc = leiaInt('Sua opção: ')
+                        while opc not in {1, 2}:
+                            opc = leiaInt('Sua opção: ')
                         cliente_logado.menu_logado(opc)
                         respo = input('Quer continuar[S/N]: ')
+                        while respo.upper() not in 'SN':
+                            respo = input('Quer continuar[S/N]: ')
                         if respo in 'Nn':
                             break 
                     elif res in 'Nn':
                         break
                 resp = input(f'Deseja manipular algo mais em sua conta {cliente_logado_nome}?[S/N] ')
+                while resp.upper() not in 'SN':
+                    resp = input('[S/N]: ')
                 if resp in 'Nn':
                     break 
