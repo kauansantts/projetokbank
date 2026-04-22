@@ -9,7 +9,7 @@ O KBank é um sistema bancário simples que simula operações básicas de uma c
 ## 🚀 Funcionalidades
 
 - Criação e manipulação de conta
-- Depósito de valore
+- Depósito de valores
 - Planejamento de 6 a 12 meses
 - Consulta e modificação de saldo
 
