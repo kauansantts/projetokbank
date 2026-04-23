@@ -69,11 +69,12 @@ class Conta:
                 print(f'[green]NOVO SALDO:[/] R${self.cliente_logado.saldo_conta}')
                 
     
-    def menu_logado(self, opc):
-        match opc:
+    def menu_logado(self, res):
+        match res:
             case 1:
                 valor = func.leiaFloat('Qual valor para o planejamento:R$ ')
                 print(f'Com 6 meses investindo {valor:.2f} seu saldo chega a R${self.cliente_logado.saldo_conta + (valor * 6):.2f}')
             case 2:
                 valor = func.leiaFloat('Qual valor para o planejamento:R$ ')
                 print(f'Com 12 meses investindo {valor:.2f} seu saldo chega a R${self.cliente_logado.saldo_conta + (valor * 12):.2f}')
+                
