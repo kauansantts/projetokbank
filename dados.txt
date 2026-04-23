@@ -1,4 +1,4 @@
-kauan:kauangalo:900.0
+kauan:kauangalo:2000.0
 lidi:lili:1200.0
 ryan:ryan244:37000.0
 teste:teste20:190.0

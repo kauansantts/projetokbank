@@ -26,41 +26,76 @@ if __name__ == "__main__":
             cliente = classes.Cliente(nome, senha)
             cliente.cadastrar_cliente(arq, saldo)
         
+        # elif res == 2:
+        #     usuario = input('Digite seu nome: ')
+        #     senha_usuario = input('Digite sua senha: ')
+        #     cliente = classes.Cliente(usuario, senha_usuario)
+        #     retorno = cliente.login(usuario, senha_usuario, arq)
+        #     if retorno == True:
+        #         resp = ''
+        #         while True:
+        #             cliente_logado_nome = cliente.nome
+        #             sleep(0.5)
+        #             func.cabecalho(f'[green]         BEM VINDO {cliente_logado_nome}[/]')
+        #             cliente_logado = classes.Conta(cliente)
+        #             cliente_logado.analise_saldo(arq)
+        #             res = ''
+        #             while True:
+        #                 res = input('Quer fazer um planejamento[S/N]: ')
+        #                 while res.upper() not in 'SN':
+        #                     res = input('Quer fazer um planejamento[S/N]: ')
+        #                 if res in 'Ss':
+        #                     painel = Panel('[blue]1[/] - 6 Meses\n[blue]2[/] - 12 Meses', title='[green]PLANEJAMENTO[/]', width=40)
+        #                     print(painel)
+        #                     opc = func.leiaInt('Sua opção: ')
+        #                     while opc not in {1, 2}:
+        #                         opc = func.leiaInt('Sua opção: ')
+        #                     cliente_logado.menu_logado(opc)
+        #                     respo = input('Quer continuar[S/N]: ')
+        #                     while respo.upper() not in 'SN':
+        #                         respo = input('Quer continuar[S/N]: ')
+        #                     if respo in 'Nn':
+        #                         break 
+        #                 elif res in 'Nn':
+        #                     break
+        #             resp = input(f'Deseja manipular algo mais em sua conta {cliente_logado_nome}?[S/N] ')
+        #             while resp.upper() not in 'SN':
+        #                 resp = input('[S/N]: ')
+        #             if resp in 'Nn':
+        #                 break 
+        
         elif res == 2:
             usuario = input('Digite seu nome: ')
             senha_usuario = input('Digite sua senha: ')
             cliente = classes.Cliente(usuario, senha_usuario)
             retorno = cliente.login(usuario, senha_usuario, arq)
             if retorno == True:
-                resp = ''
                 while True:
                     cliente_logado_nome = cliente.nome
                     sleep(0.5)
                     func.cabecalho(f'[green]         BEM VINDO {cliente_logado_nome}[/]')
                     cliente_logado = classes.Conta(cliente)
-                    cliente_logado.analise_saldo(arq)
-                    res = ''
-                    while True:
-                        res = input('Quer fazer um planejamento[S/N]: ')
-                        while res.upper() not in 'SN':
-                            res = input('Quer fazer um planejamento[S/N]: ')
-                        if res in 'Ss':
-                            painel = Panel('[blue]1[/] - 6 Meses\n[blue]2[/] - 12 Meses', title='[green]PLANEJAMENTO[/]', width=40)
-                            print(painel)
+                    painel = Panel('[blue]1[/] - Modificar/ver saldo\n[blue]2[/] - Fazer planejamento\n[blue]3[/] - Alterar conta\n[blue]4[/] - Sair', title='[green]MENU LOGADO[/]', width=40)
+                    print(painel)
+                    opc = func.leiaInt('Sua opção: ')
+                    while opc not in {1, 2, 3, 4}:
                             opc = func.leiaInt('Sua opção: ')
-                            while opc not in {1, 2}:
-                                opc = func.leiaInt('Sua opção: ')
-                            cliente_logado.menu_logado(opc)
-                            respo = input('Quer continuar[S/N]: ')
-                            while respo.upper() not in 'SN':
-                                respo = input('Quer continuar[S/N]: ')
-                            if respo in 'Nn':
-                                break 
-                        elif res in 'Nn':
+                    match opc:
+                        case 1:
+                            cliente_logado.analise_saldo(arq)
+                        case 2:
+                            painel2 = Panel('[blue]1[/] - 6 Meses\n[blue]2[/] - 12 Meses', title='[green]PLANEJAMENTO[/]', width=40)
+                            print(painel2)
+                            res = func.leiaInt('Sua opção: ')
+                            while res not in {1, 2}:
+                                 res = func.leiaInt('Sua opção: ')   
+                            cliente_logado.menu_logado(res)
+                        case 3:
+                            pass
+                        
+                        case 4:
+                            print(f'[green]SAINDO DA CONTA {cliente_logado_nome}[/]')
+                            print('LOADING....')
+                            sleep(0.7)
                             break
-                    resp = input(f'Deseja manipular algo mais em sua conta {cliente_logado_nome}?[S/N] ')
-                    while resp.upper() not in 'SN':
-                        resp = input('[S/N]: ')
-                    if resp in 'Nn':
-                        break 
-                
+                     
