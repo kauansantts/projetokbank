@@ -91,11 +91,20 @@ if __name__ == "__main__":
                                  res = func.leiaInt('Sua opção: ')   
                             cliente_logado.menu_logado(res)
                         case 3:
-                            pass
-                        
+                            cliente_logado.alterar_dados(arq)
                         case 4:
                             print(f'[green]SAINDO DA CONTA {cliente_logado_nome}[/]')
                             print('LOADING....')
                             sleep(0.7)
                             break
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
                      
