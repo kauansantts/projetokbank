@@ -34,7 +34,6 @@ class Cliente:
 class Conta:
     def __init__(self, cliente):
         self.cliente_logado = cliente
-        self.saldo_atual = self.cliente_logado.saldo_conta
         res = ''
     
     def analise_saldo(self, arq):
@@ -77,4 +76,34 @@ class Conta:
             case 2:
                 valor = func.leiaFloat('Qual valor para o planejamento:R$ ')
                 print(f'Com 12 meses investindo {valor:.2f} seu saldo chega a R${self.cliente_logado.saldo_conta + (valor * 12):.2f}')
+                
+    def alterar_dados(self, arq):
+        print(f'[green]CONTA[/]: {self.cliente_logado.nome_conta}\n[green]SENHA[/]: {self.cliente_logado.senha_conta}')
+        res = ''
+        while res in 'Ss':
+            res = input('Deseja modificar algo na sua conta[S/N]: ')
+            while res.upper() not in 'SN':
+                res = input('[S/N]: ')
+            if res in 'Nn':
+                sleep(0.5)
+                print('[green]Modifique quando quiser![/]')
+                break
+            else:
+                nome_atual = input('Nome: ')
+                senha_atual = input('Senha: ')
+                linhas = []
+                with open(arq, 'r') as arquivo:
+                    for linha in arquivo:
+                        dados = linha.strip().split(':')
+        
+                        if dados[0] == self.cliente_logado.nome_conta and dados[1] == self.cliente_logado.senha_conta:
+                            linhas.append(f'{nome_atual}:{senha_atual}:{dados[2]}\n')
+                        else:
+                            linhas.append(linha)
+                            
+                with open(arq, 'w') as arquivo:
+                    arquivo.writelines(linhas)
+                sleep(0.4)
+                print(f'[green]NOVOS DADOS:[/] Nome:{nome_atual}\nSenha: {senha_atual}')            
+
                 
